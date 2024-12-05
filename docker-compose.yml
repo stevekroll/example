@@ -1,0 +1,32 @@
+services:
+
+  prometheus:
+    container_name: prometheus
+    image:  prom/prometheus
+    ports: 
+      - 9090:9090
+    volumes:
+      - ./tools/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command: 
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --web.enable-remote-write-receiver
+      - --log.level=error
+    healthcheck:
+      test: promtool check healthy
+      start_period: 10s
+      start_interval: 1s
+  
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - ./tools/grafana/grafana.ini:/etc/grafana/grafana.ini
+      # - ./tools/grafana/lib:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+  k6:
+    container_name: k6
+    image: grafana/k6

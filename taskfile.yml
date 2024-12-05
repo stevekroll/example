@@ -1,0 +1,60 @@
+version: 3
+
+dotenv: [.env]
+includes:
+  prometheus: tools/prometheus/taskfile.yml
+  k6: tools/k6/taskfile.yml
+
+tasks:
+  # list all task commands
+  # available for this project
+  default:
+    cmd: task --list-all
+
+  # run all tests with no caching and stop
+  # once the first test fails
+  go:test:
+    internal: true
+    cmd: go test ./... -count=1 -failfast
+
+  # run the webserver locally using the
+  # environment variables defined in your
+  # root level .env
+  webserver:run:
+    internal: true
+    cmd: go run main.go webserver
+
+  # run the local environment defined
+  # by your root level docker-compose.yml
+  docker:up:
+    internal: true
+    cmd: docker compose up -d
+
+  # stop the local environment defined
+  # by your root level docker-compose.yml
+  docker:down:
+    internal: true
+    cmds:
+      - docker compose stop
+      - docker compose down
+
+  # run golangci-lint using your
+  # root level .golangci.yml
+  lint:
+    cmd: golangci-lint run
+
+  # combines the docker:up command with
+  # webserver:run into a single command
+  run:
+    cmds:
+      - task: docker:up
+      - defer: { task: docker:down }
+      - task: webserver:run
+
+  # combines the docker:up command with
+  # go:test into a single command
+  test:
+    cmds:
+      - task: docker:up
+      - defer: { task: docker:down }
+      - task: go:test
