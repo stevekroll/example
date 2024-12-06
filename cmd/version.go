@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+// use init function to add this command to our
+// rootCmd this keeps initialization to a single file.
 func init() { rootCmd.AddCommand(versionCmd) }
 
 var (
