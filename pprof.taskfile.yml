@@ -1,0 +1,31 @@
+version: 3
+tasks:
+  # generates a report based on profiling samples
+  #  to visualize and help analyze the data.
+  profile:
+    cmd: go tool pprof -text http://:8080/debug/pprof/profile?seconds=5
+
+  # generates a report based on profiling samples
+  #  to visualize and help analyze the data.
+  allocs:
+    cmd: go tool pprof -text http://:8080/debug/pprof/allocs
+
+  # generates a report based on profiling samples
+  #  to visualize and help analyze the data.
+  goroutine:
+    cmd: go tool pprof -text http://:8080/debug/pprof/goroutine
+
+  # generates a report based on profiling samples
+  #  to visualize and help analyze the data.
+  heap:
+    cmd: go tool pprof -text http://:8080/debug/pprof/heap
+
+  # generates a report based on profiling samples
+  #  to visualize and help analyze the data.
+  block:
+    cmd: go tool pprof -text http://:8080/debug/pprof/block
+
+  # generates a report based on profiling samples
+  #  to visualize and help analyze the data.
+  mutex:
+    cmd: go tool pprof -text http://:8080/debug/pprof/mutex

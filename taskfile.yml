@@ -4,6 +4,7 @@ dotenv: [.env]
 includes:
   prometheus: tools/prometheus/taskfile.yml
   k6: tools/k6/taskfile.yml
+  pprof: pprof.taskfile.yml
 
 tasks:
   # list all task commands
