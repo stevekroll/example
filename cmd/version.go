@@ -23,13 +23,13 @@ var (
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			// use PreRunE to read in the config and run
 			// validation before attempting to execute the command.
-			v := viper.New()
-			v.SetConfigFile(".env")
-			if err := v.ReadInConfig(); err != nil {
+			vpr := viper.New()
+			vpr.SetConfigFile(".env")
+			if err := vpr.ReadInConfig(); err != nil {
 				return errors.Unwrap(err)
 			}
 			// unmarshal viper values into our config struct
-			err := v.Unmarshal(versionCfg, unmarshalOpts)
+			err := vpr.Unmarshal(versionCfg, unmarshalOpts)
 			if err != nil {
 				return errors.Unwrap(err)
 			}
@@ -38,9 +38,10 @@ var (
 			return validator.New(validationOpts).
 				StructCtx(cmd.Context(), versionCfg)
 		},
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			_, err := fmt.Println("Version |", versionCfg.Version)
-			return err
+		RunE: func(_ *cobra.Command, _ []string) error {
+			str := fmt.Sprint("Version | ", versionCfg.Version)
+			_, err := fmt.Println(str)
+			return errors.Unwrap(err)
 		},
 	}
 )

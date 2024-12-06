@@ -16,9 +16,9 @@ func init() { rootCmd.AddCommand(webserverCmd) }
 
 var (
 	webserverCfg = &struct {
-		App      string     `config:"APP" validate:"required,alpha"`
-		Host     string     `config:"HOST" validate:"required,http_url"`
-		Port     string     `config:"PORT" validate:"required,number"`
+		App      string     `config:"APP"       validate:"required,alpha"`
+		Host     string     `config:"HOST"      validate:"required,http_url"`
+		Port     string     `config:"PORT"      validate:"required,number"`
 		LogLevel slog.Level `config:"LOG_LEVEL" validate:"required,numeric"`
 	}{}
 	webserverCmd = &cobra.Command{
@@ -27,13 +27,13 @@ var (
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			// use PreRunE to read in the config and run
 			// validation before attempting to execute the command.
-			v := viper.New()
-			v.SetConfigFile(".env")
-			if err := v.ReadInConfig(); err != nil {
+			vpr := viper.New()
+			vpr.SetConfigFile(".env")
+			if err := vpr.ReadInConfig(); err != nil {
 				return errors.Unwrap(err)
 			}
 			// unmarshal viper values into our config struct
-			err := v.Unmarshal(webserverCfg, unmarshalOpts)
+			err := vpr.Unmarshal(webserverCfg, unmarshalOpts)
 			if err != nil {
 				return errors.Unwrap(err)
 			}
