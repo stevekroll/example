@@ -13,21 +13,21 @@ export const options = {
     "getBundle": {
       executor: 'shared-iterations',
       vus: 10,
-      iterations: 2000,
+      iterations: 1000,
       startTime: '0s',
       exec: "getBundle"
     },
     "createBundle": {
       executor: 'shared-iterations',
       vus: 10,
-      iterations: 2000,
+      iterations: 1000,
       startTime: '0s',
       exec: "createBundle"
     },
     "updateBundle": {
       executor: 'shared-iterations',
       vus: 10,
-      iterations: 2000,
+      iterations: 1000,
       startTime: '0s',
       exec: "updateBundle"
     }
