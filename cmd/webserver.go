@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// use init function to add this command to our
-// rootCmd this keeps initialization to a single file.
+// use init function to add our command to the
+// rootCmd and keep everything in a single file.
 func init() { rootCmd.AddCommand(webserverCmd) }
 
 var (
