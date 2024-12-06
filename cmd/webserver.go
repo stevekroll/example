@@ -2,12 +2,14 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"log/slog"
+	"net/http"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/stevekroll/example/internal/webserver"
 )
 
 // use init function to add our command to the
@@ -43,8 +45,8 @@ var (
 				StructCtx(cmd.Context(), webserverCfg)
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			fmt.Println(webserverCfg)
-			return nil
+			addr := strings.Join([]string{webserverCfg.Host, webserverCfg.Port}, ":")
+			return http.ListenAndServe(netAddr(addr), webserver.NewMux())
 		},
 	}
 )
