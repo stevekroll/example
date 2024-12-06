@@ -7,6 +7,9 @@ services:
       - 9090:9090
     volumes:
       - ./tools/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./tools/prometheus/webserver.config.yml:/etc/prometheus/webserver.config.yml
+      - ./tools/prometheus/webserver.rules.yml:/etc/prometheus/webserver.rules.yml
+      - ./tools/prometheus/webserver.test.yml:/etc/prometheus/webserver.test.yml
     command: 
       - --config.file=/etc/prometheus/prometheus.yml
       - --web.enable-remote-write-receiver
@@ -23,7 +26,7 @@ services:
       - 3000:3000
     volumes:
       - ./tools/grafana/grafana.ini:/etc/grafana/grafana.ini
-      # - ./tools/grafana/lib:/var/lib/grafana
+      - ./tools/grafana/grafana.db:/var/lib/grafana/grafana.db
     depends_on:
       - prometheus
 

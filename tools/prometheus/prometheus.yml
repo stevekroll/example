@@ -1,9 +1,24 @@
 global:
-  scrape_interval: "15s"
+  # How frequently to scrape targets by default.
+  scrape_interval: 1s
+  # How long until a scrape request times out.
+  scrape_timeout: 1s
+  # How frequently to evaluate rules.
+  evaluation_interval: 1s
 
 scrape_configs:
   - job_name: "prometheus"
-    scrape_interval: "5s"
+    scrape_interval: "1s"
     static_configs:
       - targets:
           - "localhost:9090"
+
+# Rule files specifies a list of globs. Rules and alerts are read from
+# all matching files.
+rule_files:
+  - ./webserver.rules.yml
+
+# Scrape config files specifies a list of globs. Scrape configs are read from
+# all matching files and appended to the list of scrape configs.
+scrape_config_files:
+  - ./webserver.config.yml

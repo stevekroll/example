@@ -1,0 +1,24 @@
+rule_files:
+  - ./webserver.rules.yml
+
+tests:
+  - interval: 1m
+    input_series:
+      - series: up{job="webserver"}
+        values: 1 1 1 1 0
+
+    promql_expr_test:
+      - expr: up{job="webserver"} < 1
+        eval_time: 5m
+        exp_samples:
+          - labels: up{job="webserver"}
+            value: 0
+
+    alert_rule_test:
+      - alertname: webserver:status_down
+        eval_time: 5m
+        exp_alerts:
+          - exp_labels:
+              job: "webserver"
+            exp_annotations:
+              name: "webserver ready status"

@@ -1,0 +1,21 @@
+groups:
+  - name: webserver
+    rules:
+      # - record: instance_path:requests:rate5m
+      #   expr: rate(requests_total{job="webserver"}[5m])
+
+      # The name of the alert. Must be a valid label value.
+      - alert: webserver:status_down
+        # The PromQL expression to evaluate. Every evaluation cycle this is
+        # evaluated at the current time, and all resultant time series become
+        # pending/firing alerts.
+        expr: up{job="webserver"} < 1
+        # Alerts are considered firing once they have been returned for this long.
+        # Alerts which have not yet fired for long enough are considered pending.
+        for: 0s
+        # How long an alert will continue firing after the condition that triggered it
+        # has cleared.
+        keep_firing_for: 0s
+        # Annotations to add to each alert.
+        annotations:
+          name: "webserver ready status"
