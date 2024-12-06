@@ -1,44 +1,44 @@
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"errors"
+	"fmt"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+)
 
 func init() { rootCmd.AddCommand(versionCmd) }
 
-var versionCmd = &cobra.Command{
-	Use:        "version",
-	Aliases:    []string{},
-	SuggestFor: []string{},
-	Short:      "",
-	GroupID:    "",
-	Long:       "",
-	Example:    "",
-	ValidArgs:  []string{},
-	// ValidArgsFunction:          func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {},
-	// Args:                       func(cmd *cobra.Command, args []string) error {},
-	ArgAliases:             []string{},
-	BashCompletionFunction: "",
-	Deprecated:             "",
-	Annotations:            map[string]string{},
-	Version:                "",
-	// PersistentPreRun:           func(cmd *cobra.Command, args []string) {},
-	// PersistentPreRunE:          func(cmd *cobra.Command, args []string) error {},
-	// PreRun:                     func(cmd *cobra.Command, args []string) {},
-	// PreRunE:                    func(cmd *cobra.Command, args []string) error {},
-	// Run:                        func(cmd *cobra.Command, args []string) {},
-	// RunE:                       func(cmd *cobra.Command, args []string) error {},
-	// PostRun:                    func(cmd *cobra.Command, args []string) {},
-	// PostRunE:                   func(cmd *cobra.Command, args []string) error {},
-	// PersistentPostRun:          func(cmd *cobra.Command, args []string) {},
-	// PersistentPostRunE:         func(cmd *cobra.Command, args []string) error {},
-	FParseErrWhitelist:         cobra.FParseErrWhitelist{},
-	CompletionOptions:          cobra.CompletionOptions{},
-	TraverseChildren:           false,
-	Hidden:                     false,
-	SilenceErrors:              false,
-	SilenceUsage:               false,
-	DisableFlagParsing:         false,
-	DisableAutoGenTag:          false,
-	DisableFlagsInUseLine:      false,
-	DisableSuggestions:         false,
-	SuggestionsMinimumDistance: 0,
-}
+var (
+	versionCfg = &struct {
+		Version string `config:"VERSION" validate:"required,semver"`
+	}{}
+	versionCmd = &cobra.Command{
+		Use:   "version",
+		Short: "Print the current version of the project",
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
+			// use PreRunE to read in the config and run
+			// validation before attempting to execute the command.
+			v := viper.New()
+			v.SetConfigFile(".env")
+			if err := v.ReadInConfig(); err != nil {
+				return errors.Unwrap(err)
+			}
+			// unmarshal viper values into our config struct
+			err := v.Unmarshal(versionCfg, unmarshalOpts)
+			if err != nil {
+				return errors.Unwrap(err)
+			}
+			// validate required fields are set
+			// and values are formatted correctly
+			return validator.New(validationOpts).
+				StructCtx(cmd.Context(), versionCfg)
+		},
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			_, err := fmt.Println("Version |", versionCfg.Version)
+			return err
+		},
+	}
+)

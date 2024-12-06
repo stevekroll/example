@@ -43,9 +43,14 @@ tasks:
   lint:
     cmd: golangci-lint run
 
+  # prints the current version
+  # of the project
+  version:
+    cmd: go run main.go version
+
   # combines the docker:up command with
   # webserver:run into a single command
-  run:
+  webserver:
     cmds:
       - task: docker:up
       - defer: { task: docker:down }

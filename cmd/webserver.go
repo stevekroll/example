@@ -1,44 +1,48 @@
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"errors"
+	"fmt"
+	"log/slog"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+)
 
 func init() { rootCmd.AddCommand(webserverCmd) }
 
-var webserverCmd = &cobra.Command{
-	Use:        "webserver",
-	Aliases:    []string{},
-	SuggestFor: []string{},
-	Short:      "",
-	GroupID:    "",
-	Long:       "",
-	Example:    "",
-	ValidArgs:  []string{},
-	// ValidArgsFunction:          func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {},
-	// Args:                       func(cmd *cobra.Command, args []string) error {},
-	ArgAliases:             []string{},
-	BashCompletionFunction: "",
-	Deprecated:             "",
-	Annotations:            map[string]string{},
-	Version:                "",
-	// PersistentPreRun:           func(cmd *cobra.Command, args []string) {},
-	// PersistentPreRunE:          func(cmd *cobra.Command, args []string) error {},
-	// PreRun:                     func(cmd *cobra.Command, args []string) {},
-	// PreRunE:                    func(cmd *cobra.Command, args []string) error {},
-	// Run:                        func(cmd *cobra.Command, args []string) {},
-	// RunE:                       func(cmd *cobra.Command, args []string) error {},
-	// PostRun:                    func(cmd *cobra.Command, args []string) {},
-	// PostRunE:                   func(cmd *cobra.Command, args []string) error {},
-	// PersistentPostRun:          func(cmd *cobra.Command, args []string) {},
-	// PersistentPostRunE:         func(cmd *cobra.Command, args []string) error {},
-	FParseErrWhitelist:         cobra.FParseErrWhitelist{},
-	CompletionOptions:          cobra.CompletionOptions{},
-	TraverseChildren:           false,
-	Hidden:                     false,
-	SilenceErrors:              false,
-	SilenceUsage:               false,
-	DisableFlagParsing:         false,
-	DisableAutoGenTag:          false,
-	DisableFlagsInUseLine:      false,
-	DisableSuggestions:         false,
-	SuggestionsMinimumDistance: 0,
-}
+var (
+	webserverCfg = &struct {
+		App      string     `config:"APP" validate:"required,alpha"`
+		Host     string     `config:"HOST" validate:"required,http_url"`
+		Port     string     `config:"PORT" validate:"required,number"`
+		LogLevel slog.Level `config:"LOG_LEVEL" validate:"required,numeric"`
+	}{}
+	webserverCmd = &cobra.Command{
+		Use:   "webserver",
+		Short: "Run the webserver",
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
+			// use PreRunE to read in the config and run
+			// validation before attempting to execute the command.
+			v := viper.New()
+			v.SetConfigFile(".env")
+			if err := v.ReadInConfig(); err != nil {
+				return errors.Unwrap(err)
+			}
+			// unmarshal viper values into our config struct
+			err := v.Unmarshal(webserverCfg, unmarshalOpts)
+			if err != nil {
+				return errors.Unwrap(err)
+			}
+			// validate required fields are set
+			// and values are formatted correctly
+			return validator.New(validationOpts).
+				StructCtx(cmd.Context(), webserverCfg)
+		},
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			fmt.Println(webserverCfg)
+			return nil
+		},
+	}
+)
