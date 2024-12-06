@@ -29,7 +29,3 @@ services:
       - ./tools/grafana/grafana.db:/var/lib/grafana/grafana.db
     depends_on:
       - prometheus
-
-  k6:
-    container_name: k6
-    image: grafana/k6

@@ -1,2 +1,33 @@
 version: 3
 tasks:
+  pull:
+    cmd: "docker pull grafana/xk6"
+
+  build:
+    cmd: "docker run --rm \
+      --env GOOS=darwin \
+      --user $(id -u):$(id -g) \
+      --volume '{{.TASKFILE_DIR}}:/xk6' \
+      grafana/xk6 build --with github.com/grafana/xk6-faker@latest \
+      --output xk6"
+
+  new:
+    env:
+      filename: ""
+    cmd: "{{.TASKFILE_DIR}}/xk6 new {{.TASKFILE_DIR}}/scripts/{{.filename}}.js"
+    requires:
+      vars: [filename]
+
+  run:
+    env:
+      filename: ""
+    requires:
+      vars: [filename]
+    # dotenv:
+    # - "{{.ROOT_DIR}}.env"
+    cmd: "{{.TASKFILE_DIR}}/xk6 run \
+      -e K6_ENV=./env \
+      -e K6_PROMETHEUS_RW_SERVER_URL=http://localhost:9090/api/v1/write \
+      -o experimental-prometheus-rw \
+      {{.TASKFILE_DIR}}/scripts/{{.filename}}.js \
+      --no-usage-report"

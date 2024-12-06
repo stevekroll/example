@@ -1,0 +1,128 @@
+[
+    {
+        "external_reference_id": "1d6bc5e5-e469-4d22-abb7-9797a0e3647a",
+        "orders": null,
+        "fulfillment_instructions": {
+            "retailer": "27"
+        },
+        "pickup_schedule": {
+            "type": "pickup_between",
+            "pickup_between": {
+                "start": "2022-04-01T08:00:00-00:00",
+                "end": "2022-04-01T09:00:00-00:00"
+            }
+        },
+        "forecast": {
+            "number_of_orders": {
+                "min": 0,
+                "max": 500
+            },
+            "number_of_stops": {
+                "min": 0,
+                "max": 500
+            },
+            "total_duration_minutes": {
+                "min": 0,
+                "max": 720
+            },
+            "distance_from_origin_miles": {
+                "min": 0,
+                "max": 50
+            },
+            "max_capacity_cubic_inches": 900000
+        },
+        "delivery_schedule": {
+            "type": "deliver_by",
+            "deliver_by": {
+                "date": "2021-06-14"
+            }
+        },
+        "pickup_locations": [
+            {
+                "store_number": "1111",
+                "instructions": {
+                    "arrival": "test",
+                    "retailer": "test"
+                },
+                "schedule": {
+                    "type": "pickup_between",
+                    "pickup_by": {
+                        "time": "2019-08-24T14:15:22Z"
+                    },
+                    "pickup_between": {
+                        "start": "2019-08-24T14:15:22Z",
+                        "end": "2019-08-24T14:15:22Z"
+                    }
+                }
+            }
+        ],
+        "detail": {
+            "is_rush_route": true,
+            "fulfilled_by": "ic",
+            "estimated_route_duration": 0
+        }
+    },
+    {
+        "external_reference_id": "f634c954-d401-44fa-bba7-5676af112d72",
+        "orders": null,
+        "fulfillment_instructions": {
+            "retailer": "27"
+        },
+        "pickup_schedule": {
+            "type": "pickup_between",
+            "pickup_between": {
+                "start": "2022-04-01T08:00:00-00:00",
+                "end": "2022-04-01T09:00:00-00:00"
+            }
+        },
+        "forecast": {
+            "number_of_orders": {
+                "min": 0,
+                "max": 500
+            },
+            "number_of_stops": {
+                "min": 0,
+                "max": 500
+            },
+            "total_duration_minutes": {
+                "min": 0,
+                "max": 720
+            },
+            "distance_from_origin_miles": {
+                "min": 0,
+                "max": 50
+            },
+            "max_capacity_cubic_inches": 900000
+        },
+        "delivery_schedule": {
+            "type": "deliver_by",
+            "deliver_by": {
+                "date": "2021-06-14"
+            }
+        },
+        "pickup_locations": [
+            {
+                "store_number": "1111",
+                "instructions": {
+                    "arrival": "test",
+                    "retailer": "test"
+                },
+                "schedule": {
+                    "type": "pickup_between",
+                    "pickup_by": {
+                        "time": "2019-08-24T14:15:22Z"
+                    },
+                    "pickup_between": {
+                        "start": "2019-08-24T14:15:22Z",
+                        "end": "2019-08-24T14:15:22Z"
+                    }
+                }
+            }
+        ],
+        "detail": {
+            "is_rush_route": true,
+            "fulfilled_by": "dsp",
+            "estimated_route_duration": 0
+        }
+    }
+]
