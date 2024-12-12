@@ -2,7 +2,8 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
+	"log"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/spf13/cobra"
@@ -39,9 +40,9 @@ var (
 				StructCtx(cmd.Context(), versionCfg)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
-			str := fmt.Sprint("Version | ", versionCfg.Version)
-			_, err := fmt.Println(str)
-			return errors.Unwrap(err)
+			str := strings.Join([]string{"Version", versionCfg.Version}, " | ")
+			log.Println(str)
+			return nil
 		},
 	}
 )

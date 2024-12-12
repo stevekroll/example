@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/spf13/cobra"
@@ -22,6 +23,7 @@ var (
 		Host     string     `config:"HOST"      validate:"required,http_url"`
 		Port     string     `config:"PORT"      validate:"required,number"`
 		LogLevel slog.Level `config:"LOG_LEVEL" validate:"required,numeric"`
+		Timeout  int        `config:"TIMEOUT"   validate:"required,numeric"`
 	}{}
 	webserverCmd = &cobra.Command{
 		Use:   "webserver",
@@ -44,9 +46,14 @@ var (
 			return validator.New(validationOpts).
 				StructCtx(cmd.Context(), webserverCfg)
 		},
-		RunE: func(cmd *cobra.Command, _ []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			addr := strings.Join([]string{webserverCfg.Host, webserverCfg.Port}, ":")
-			return http.ListenAndServe(netAddr(addr), webserver.NewMux())
+			srv := http.Server{
+				Addr:              netAddr(addr),
+				Handler:           webserver.NewMux(),
+				ReadHeaderTimeout: time.Duration(webserverCfg.Timeout),
+			}
+			return srv.ListenAndServe()
 		},
 	}
 )

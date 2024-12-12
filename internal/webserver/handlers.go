@@ -1,15 +1,16 @@
 package webserver
 
 import (
+	"crypto/rand"
 	"math/big"
 	"net/http"
 	"time"
-
-	"crypto/rand"
 )
 
+const sleepDuration = 250
+
 func sleep() {
-	num, _ := rand.Int(rand.Reader, big.NewInt(250))
+	num, _ := rand.Int(rand.Reader, big.NewInt(sleepDuration))
 	time.Sleep(time.Millisecond * time.Duration(num.Int64()))
 }
 
