@@ -1,25 +1,59 @@
+## Environment
+#### Create a new `.env` in the root directory of the project.
+
+Here is a basic example:
+```env
+APP=example
+VERSION=0.1.0
+HOST=http://127.0.0.1
+PORT=8080
+LOG_LEVEL=-4
+TIMEOUT=5000
+```
+
+## Taskfile
+
+Installation:
+https://taskfile.dev/installation/
+
+We will use this to chain together multiple commands for simplifying processes with more than one step.
+
+For example, running the webserver: 
+```
+task webserver
+```
+vs
+```
+docker compose up
+```
+```
+go run main.go webserver
+```
+```
+docker compose down
+```
+
 ## K6
 #### Build Custom K6 Image
-* `task k6:pull`
-* `task k6:build`
+* Run the command `task k6:pull` to pull the latest xk6 image.
+* Then run `task k6:build` to build a custom k6 image with faker extension.
 
-#### Create New Load Test Script
-* `task k6:new filename={$filename}`
-
-#### Run Load Test Script
-* `task k6:run filename=`
+#### Running A Load Test
+* Run `task k6:new filename={$filename}` to create a new load test script.
+* Run the script with command `task k6:run filename={$filename}`.
 
 ## Grafana
 #### Configure Grafana Dashboard
-* Open `http://localhost:3000`
-* Select 'Create New Dashboard'
-* Create a new data source and select `Prometheus`
-* Use http://host.docker.internal:9090
-* Import a new dashboard using JSON found in `tools/grafana/dashboards`
+* Open `http://localhost:3000`.
+* Select 'Create New Dashboard'.
+* Create a new data source and select `Prometheus`.
+* Use http://host.docker.internal:9090.
+* Import a new dashboard using JSON found in `tools/grafana/dashboards`.
 
 ## Prometheus
 #### Run Unit Tests
-* `task prometheus:test`
+* Make sure both docker compose and prometheus are running.
+* Run the command `task prometheus:test`.
 
 ## PPROF
 
